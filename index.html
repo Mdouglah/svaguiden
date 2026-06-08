@@ -320,11 +320,54 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
 
 .hidden { display: none !important; }
 
+/* ─── PRINT HEADER/FOOTER ──────────────── */
+.print-header {
+  display: none;
+  padding: 0 0 16px 0;
+  margin-bottom: 16px;
+  border-bottom: 3px solid var(--navy);
+  align-items: center;
+  justify-content: space-between;
+}
+.print-header-left { display: flex; align-items: center; gap: 12px; }
+.print-badge {
+  background: var(--navy); color: white;
+  font-family: "Playfair Display", serif;
+  font-size: 13px; width: 36px; height: 36px;
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+}
+.print-app-name { font-family: "Playfair Display", serif; font-size: 18px; color: var(--navy); }
+.print-app-sub { font-size: 11px; color: var(--text-muted); }
+.print-date { font-size: 11px; color: var(--text-muted); text-align: right; }
+.print-footer {
+  display: none;
+  margin-top: 24px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 10px; color: #9aafbf; text-align: center;
+}
 @media print {
-  .hero, .steps, .result-footer { display: none !important; }
+  @page { margin: 18mm 15mm; size: A4; }
+  .hero, .steps, .result-footer, .btn-print, .btn-pdf { display: none !important; }
+  body { background: white; font-size: 13px; }
   main { padding: 0; max-width: 100%; }
-  .result-hero { background: #1a3a5c !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .lesson-section { break-inside: avoid; }
+  .print-header { display: flex !important; }
+  .print-footer { display: block !important; }
+  .result-wrap { border: none; box-shadow: none; }
+  .result-hero { background: var(--navy) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 8px; margin-bottom: 4px; }
+  .result-hero::after { display: none; }
+  .result-title { font-size: 20px !important; }
+  .lesson-section { break-inside: avoid; padding: 16px 0 !important; border-bottom: 1px solid #edf2f7 !important; }
+  .sec-head { margin-bottom: 10px !important; }
+  .sec-icon-wrap { width: 30px !important; height: 30px !important; font-size: 15px !important; }
+  .sec-label { font-size: 15px !important; }
+  .sec-body { font-size: 13px !important; line-height: 1.7 !important; }
+  .vocab-word { min-width: 110px !important; font-size: 12px !important; }
+  .vocab-def { font-size: 12px !important; }
+  .s-text .sec-label { color: #1565c0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .s-q .sec-label { color: #bf5000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .s-vocab .sec-label { color: #6b21a8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .s-write .sec-label { color: #166534 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .s-teacher .sec-label { color: #9d174d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
 @media (max-width: 520px) {
@@ -473,16 +516,39 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
 
   <!-- STEP 4: RESULT -->
   <div class="result-wrap hidden" id="result-wrap">
+    <!-- Utskriftshuvud -->
+    <div class="print-header" id="print-header">
+      <div class="print-header-left">
+        <div class="print-badge">SVA</div>
+        <div>
+          <div class="print-app-name">SVAGuiden</div>
+          <div class="print-app-sub">Kompletta lektioner · SVA Gymnasium · Gy11</div>
+        </div>
+      </div>
+      <div class="print-date" id="print-date"></div>
+    </div>
+
     <div class="result-hero">
       <div class="result-hero-top">
         <div class="result-title" id="result-title">Lektion</div>
-        <button class="btn-print" onclick="window.print()">🖨 Skriv ut</button>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn-print btn-pdf" onclick="savePDF()">📄 PDF</button>
+          <button class="btn-print" onclick="window.print()">🖨 Skriv ut</button>
+        </div>
       </div>
       <div class="result-tags" id="result-tags"></div>
     </div>
     <div class="result-sections" id="result-sections"></div>
+
+    <!-- Utskriftssidfot -->
+    <div class="print-footer">
+      Genererad av SVAGuiden · svaguiden.vercel.app · Lektionen är AI-genererad och bör granskas av läraren
+    </div>
+
     <div class="result-footer">
       <button class="btn-primary" onclick="reset()">← Ny lektion</button>
+      <button class="btn-secondary" onclick="window.print()">🖨 Skriv ut</button>
+      <button class="btn-secondary" onclick="savePDF()">📄 Spara PDF</button>
     </div>
   </div>
 
@@ -561,6 +627,10 @@ async function generate() {
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('result-wrap').classList.remove('hidden');
     document.getElementById('result-title').textContent = `Lektion – ${state.kurs}`;
+    // Set print date
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('sv-SE', { year:'numeric', month:'long', day:'numeric' });
+    document.getElementById('print-date').innerHTML = dateStr + '<br>' + state.kurs + ' · ' + state.niva;
 
     const tags = document.getElementById('result-tags');
     tags.innerHTML = '';
@@ -670,6 +740,14 @@ function formatText(text) {
     .replace(/\n\n+/g, '</p><p>')
     .replace(/\n/g, '<br>')
     .replace(/^(.+)$/, '<p>$1</p>');
+}
+
+function savePDF() {
+  // Set print date before opening dialog
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('sv-SE', { year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('print-date').innerHTML = dateStr + '<br>' + state.kurs + ' · ' + state.niva;
+  window.print();
 }
 
 function reset() {
