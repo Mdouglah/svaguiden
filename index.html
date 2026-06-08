@@ -3,446 +3,193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SVAGuiden – Lektionsplanering för gymnasiet</title>
+<title>SVAGuiden – Kompletta lektioner för gymnasiet</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --navy: #1a3a5c;
-    --navy-dark: #0f2540;
-    --navy-light: #2a5080;
-    --gold: #e8a020;
-    --gold-light: #f5c060;
-    --gold-pale: #fdf3e0;
-    --white: #ffffff;
-    --bg: #f4f6f9;
-    --text: #1a2535;
-    --text-muted: #5a6a7e;
-    --border: #d0d8e4;
-    --radius: 12px;
-    --radius-sm: 8px;
+    --navy: #1a3a5c; --navy-dark: #0f2540; --navy-light: #2a5080;
+    --gold: #e8a020; --gold-pale: #fdf3e0;
+    --white: #ffffff; --bg: #f4f6f9; --text: #1a2535;
+    --text-muted: #5a6a7e; --border: #d0d8e4; --radius: 12px; --radius-sm: 8px;
   }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  /* HEADER */
   header {
-    background: var(--navy-dark);
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    background: var(--navy-dark); padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; position: sticky; top: 0; z-index: 100;
   }
-
-  .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
+  .logo-area { display: flex; align-items: center; gap: 12px; }
   .logo-badge {
-    background: var(--gold);
-    color: var(--white);
-    font-family: 'DM Serif Display', serif;
-    font-size: 14px;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    letter-spacing: 0.5px;
+    background: var(--gold); color: var(--white);
+    font-family: 'DM Serif Display', serif; font-size: 14px;
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
   }
-
-  .logo-text {
-    color: var(--white);
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: -0.3px;
-  }
-
-  .logo-sub {
-    color: #7a9fc0;
-    font-size: 12px;
-  }
-
+  .logo-text { color: var(--white); font-size: 18px; font-weight: 600; }
+  .logo-sub { color: #7a9fc0; font-size: 12px; }
   .feedback-btn {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.25);
-    color: #a8c4d8;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s;
+    background: transparent; border: 1px solid rgba(255,255,255,0.25);
+    color: #a8c4d8; padding: 6px 16px; border-radius: 20px;
+    font-size: 12px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; text-decoration: none;
+    display: flex; align-items: center; gap: 6px; transition: all 0.2s;
   }
+  .feedback-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
 
-  .feedback-btn:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.4);
-    color: #fff;
-  }
+  main { max-width: 720px; margin: 0 auto; padding: 32px 16px 60px; }
 
-  /* MAIN */
-  main {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 32px 16px 60px;
-  }
-
-  /* STEP INDICATOR */
-  .steps {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    margin-bottom: 32px;
-  }
-
-  .step-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-  }
-
+  .steps { display: flex; align-items: center; margin-bottom: 32px; }
+  .step-item { display: flex; align-items: center; gap: 8px; flex: 1; }
   .step-item:last-child { flex: 0; }
-
   .step-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--white);
-    border: 2px solid var(--border);
-    color: var(--text-muted);
-    font-size: 13px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-    flex-shrink: 0;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--white); border: 2px solid var(--border);
+    color: var(--text-muted); font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s; flex-shrink: 0;
   }
-
-  .step-circle.active {
-    background: var(--navy);
-    border-color: var(--navy);
-    color: var(--white);
-  }
-
-  .step-circle.done {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--white);
-  }
-
-  .step-line {
-    flex: 1;
-    height: 2px;
-    background: var(--border);
-    margin: 0 4px;
-    transition: background 0.3s;
-  }
-
+  .step-circle.active { background: var(--navy); border-color: var(--navy); color: var(--white); }
+  .step-circle.done { background: var(--gold); border-color: var(--gold); color: var(--white); }
+  .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 4px; transition: background 0.3s; }
   .step-line.done { background: var(--gold); }
 
-  .step-label-text {
-    font-size: 11px;
-    color: var(--text-muted);
-    display: none;
-  }
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 16px; }
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); margin-bottom: 6px; }
+  .card-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
 
-  /* CARD */
-  .card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 28px;
-    margin-bottom: 16px;
-  }
-
-  .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--navy);
-    margin-bottom: 6px;
-  }
-
-  .card-desc {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-bottom: 24px;
-    line-height: 1.5;
-  }
-
-  /* FIELD */
   .field { margin-bottom: 22px; }
+  .field-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
 
-  .field-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-  }
-
-  /* CHIPS */
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
-    padding: 8px 16px;
-    border-radius: 24px;
-    border: 1.5px solid var(--border);
-    background: var(--white);
-    color: var(--text-muted);
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    transition: all 0.18s;
-    user-select: none;
+    padding: 8px 16px; border-radius: 24px; border: 1.5px solid var(--border);
+    background: var(--white); color: var(--text-muted); font-size: 14px;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.18s; user-select: none;
   }
-
   .chip:hover { border-color: var(--navy-light); color: var(--navy); }
+  .chip.selected { background: var(--navy); border-color: var(--navy); color: var(--white); }
 
-  .chip.selected {
-    background: var(--navy);
-    border-color: var(--navy);
-    color: var(--white);
-  }
-
-  .chip.selected-gold {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--white);
-  }
-
-  /* KURS CARDS */
-  .kurs-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .kurs-card {
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    cursor: pointer;
-    transition: all 0.18s;
-  }
-
+  .kurs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .kurs-card { border: 2px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: all 0.18s; }
   .kurs-card:hover { border-color: var(--navy-light); }
+  .kurs-card.selected { border-color: var(--navy); background: #f0f5fb; }
+  .kurs-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+  .kurs-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .kurs-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
 
-  .kurs-card.selected {
-    border-color: var(--navy);
-    background: #f0f5fb;
-  }
-
-  .kurs-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    color: var(--navy);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .kurs-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-
-  .kurs-desc {
-    font-size: 11px;
-    color: var(--text-muted);
-    line-height: 1.4;
-  }
-
-  /* INPUT */
   .text-input {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    background: var(--white);
-    outline: none;
-    transition: border-color 0.18s;
+    width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 10px 14px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+    color: var(--text); background: var(--white); outline: none; transition: border-color 0.18s;
   }
-
   .text-input:focus { border-color: var(--navy); }
 
-  /* BUTTONS */
   .btn-primary {
-    background: var(--navy);
-    color: var(--white);
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 13px 28px;
-    font-size: 15px;
-    font-weight: 600;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    transition: background 0.18s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    background: var(--navy); color: var(--white); border: none;
+    border-radius: var(--radius-sm); padding: 13px 28px; font-size: 15px;
+    font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: background 0.18s; display: inline-flex; align-items: center; gap: 8px;
   }
-
   .btn-primary:hover { background: var(--navy-light); }
-
-  .btn-primary:disabled {
-    background: var(--border);
-    color: var(--text-muted);
-    cursor: not-allowed;
-  }
-
+  .btn-primary:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
   .btn-secondary {
-    background: transparent;
-    color: var(--text-muted);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 24px;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    transition: all 0.18s;
+    background: transparent; color: var(--text-muted); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 24px; font-size: 14px;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.18s;
   }
-
   .btn-secondary:hover { border-color: var(--navy-light); color: var(--navy); }
-
-  .btn-row {
-    display: flex;
-    gap: 12px;
-    margin-top: 24px;
-  }
+  .btn-row { display: flex; gap: 12px; margin-top: 24px; }
 
   /* RESULT */
-  #result-area {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 28px;
-  }
+  #result-area { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
 
-  .result-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
+  .result-topbar {
+    background: var(--navy-dark); padding: 20px 28px;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
   }
+  .result-topbar-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); margin-bottom: 10px; }
+  .result-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .result-tag {
+    background: rgba(255,255,255,0.12); color: #c8dff0;
+    font-size: 12px; font-weight: 500; padding: 3px 10px;
+    border-radius: 20px; border: 1px solid rgba(255,255,255,0.15);
+  }
+  .btn-print {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #c8dff0; border-radius: var(--radius-sm); padding: 8px 16px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer;
+    display: flex; align-items: center; gap: 6px; transition: all 0.18s; white-space: nowrap;
+  }
+  .btn-print:hover { background: rgba(255,255,255,0.18); color: #fff; }
 
-  .result-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
+  .result-body { padding: 0; }
 
-  .meta-tag {
-    background: #f0f5fb;
-    color: var(--navy);
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
-    border: 1px solid #c8d8ec;
+  /* SECTION CARDS */
+  .section {
+    border-bottom: 1px solid var(--border); padding: 24px 28px;
   }
+  .section:last-child { border-bottom: none; }
 
-  .result-content {
-    font-size: 15px;
-    line-height: 1.75;
-    color: var(--text);
-    white-space: pre-wrap;
+  .section-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
   }
+  .section-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+  }
+  .section-title { font-family: 'DM Serif Display', serif; font-size: 18px; }
 
-  .result-content h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 19px;
-    color: var(--navy);
-    margin: 20px 0 8px;
-  }
+  .section-text { font-size: 15px; line-height: 1.8; color: var(--text); }
+  .section-text p { margin-bottom: 10px; }
+  .section-text ol, .section-text ul { padding-left: 20px; }
+  .section-text li { margin-bottom: 8px; line-height: 1.6; }
+  .section-text strong { font-weight: 600; }
 
-  .result-content h3 {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    margin: 16px 0 6px;
-  }
+  /* Section color themes */
+  .sec-text .section-icon { background: #e8f4fd; }
+  .sec-text .section-title { color: #1565c0; }
+
+  .sec-questions .section-icon { background: #fff3e0; }
+  .sec-questions .section-title { color: #e65100; }
+
+  .sec-vocab .section-icon { background: #f3e5f5; }
+  .sec-vocab .section-title { color: #6a1b9a; }
+
+  .sec-writing .section-icon { background: #e8f5e9; }
+  .sec-writing .section-title { color: #2e7d32; }
+
+  .sec-teacher .section-icon { background: #fce4ec; }
+  .sec-teacher .section-title { color: #880e4f; }
 
   /* LOADING */
-  .loading-area {
-    text-align: center;
-    padding: 48px 24px;
-  }
-
+  .loading-area { text-align: center; padding: 60px 24px; }
   .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--border);
-    border-top-color: var(--navy);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 16px;
+    width: 44px; height: 44px; border: 3px solid var(--border);
+    border-top-color: var(--navy); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 16px;
   }
-
   @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: var(--text-muted); font-size: 14px; margin-bottom: 6px; }
+  .loading-sub { color: #9aafbf; font-size: 12px; }
 
-  .loading-text {
-    color: var(--text-muted);
-    font-size: 14px;
-  }
-
-  /* HIDDEN */
   .hidden { display: none !important; }
 
-  /* PRINT BTN */
-  .btn-print {
-    background: transparent;
-    border: 1.5px solid var(--border);
-    color: var(--text-muted);
-    border-radius: var(--radius-sm);
-    padding: 8px 16px;
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.18s;
-  }
+  .btn-row-result { padding: 20px 28px; border-top: 1px solid var(--border); }
 
-  .btn-print:hover { border-color: var(--navy); color: var(--navy); }
+  @media print {
+    header, .steps, .btn-row-result { display: none !important; }
+    main { padding: 0; max-width: 100%; }
+    .result-topbar { background: #1a3a5c !important; -webkit-print-color-adjust: exact; }
+    .section { break-inside: avoid; }
+  }
 
   @media (max-width: 500px) {
     .kurs-grid { grid-template-columns: 1fr; }
     main { padding: 20px 12px 60px; }
-    .card { padding: 20px; }
+    .card, .section { padding: 18px; }
+    .result-topbar { padding: 16px 18px; }
   }
 </style>
 </head>
@@ -453,17 +200,13 @@
     <div class="logo-badge">SVA</div>
     <div>
       <div class="logo-text">SVAGuiden</div>
-      <div class="logo-sub">Lektionsplanering · Gymnasium</div>
+      <div class="logo-sub">Kompletta lektioner · Gymnasium</div>
     </div>
   </div>
-  <a class="feedback-btn" href="mailto:mustafa.douglah@enkoping.se?subject=Feedback SVAGuiden">
-    ✉ Skicka feedback
-  </a>
+  <a class="feedback-btn" href="mailto:mustafa.douglah@enkoping.se?subject=Feedback SVAGuiden">✉ Skicka feedback</a>
 </header>
 
 <main>
-
-  <!-- STEP INDICATOR -->
   <div class="steps" id="step-indicator">
     <div class="step-item">
       <div class="step-circle active" id="sc1">1</div>
@@ -482,7 +225,7 @@
     </div>
   </div>
 
-  <!-- STEP 1: KURS -->
+  <!-- STEP 1 -->
   <div class="card" id="step1">
     <div class="card-title">Välj kurs</div>
     <div class="card-desc">SVA på gymnasiet har tre kurser med olika nivåer och kursmål enligt Gy11.</div>
@@ -508,50 +251,44 @@
     </div>
   </div>
 
-  <!-- STEP 2: ELEVPROFIL -->
+  <!-- STEP 2 -->
   <div class="card hidden" id="step2">
     <div class="card-title">Elevprofil</div>
-    <div class="card-desc">Beskriv elevgruppen så lektionsplanen anpassas rätt.</div>
-
+    <div class="card-desc">Beskriv elevgruppen så lektionen anpassas rätt.</div>
     <div class="field">
       <div class="field-label">Tid i Sverige</div>
       <div class="chips" id="chips-tid">
-        <span class="chip" data-val="Nyligen anländ (0–1 år)" onclick="selectChip(this, 'tid')">Nyligen anländ</span>
-        <span class="chip" data-val="1–3 år i Sverige" onclick="selectChip(this, 'tid')">1–3 år</span>
-        <span class="chip" data-val="Etablerad (3+ år)" onclick="selectChip(this, 'tid')">Etablerad (3+ år)</span>
+        <span class="chip" data-val="Nyligen anländ (0–1 år)" onclick="selectChip(this,'tid')">Nyligen anländ</span>
+        <span class="chip" data-val="1–3 år i Sverige" onclick="selectChip(this,'tid')">1–3 år</span>
+        <span class="chip" data-val="Etablerad (3+ år)" onclick="selectChip(this,'tid')">Etablerad (3+ år)</span>
       </div>
     </div>
-
     <div class="field">
       <div class="field-label">Elevens nivå i svenska</div>
       <div class="chips" id="chips-niva">
-        <span class="chip" data-val="Nybörjare" onclick="selectChip(this, 'niva')">Nybörjare</span>
-        <span class="chip" data-val="Medelnivå" onclick="selectChip(this, 'niva')">Medelnivå</span>
-        <span class="chip" data-val="Avancerad" onclick="selectChip(this, 'niva')">Avancerad</span>
+        <span class="chip" data-val="Nybörjare" onclick="selectChip(this,'niva')">Nybörjare</span>
+        <span class="chip" data-val="Medelnivå" onclick="selectChip(this,'niva')">Medelnivå</span>
+        <span class="chip" data-val="Avancerad" onclick="selectChip(this,'niva')">Avancerad</span>
       </div>
     </div>
-
     <div class="field">
       <div class="field-label">Modersmål (valfritt)</div>
       <input class="text-input" id="input-modersmal" type="text" placeholder="t.ex. arabiska, somaliska, dari...">
     </div>
-
     <div class="field">
       <div class="field-label">Klassinfo (valfritt)</div>
       <input class="text-input" id="input-klass" type="text" placeholder="t.ex. blandad grupp, IM-program...">
     </div>
-
     <div class="btn-row">
       <button class="btn-secondary" onclick="goTo(1)">← Tillbaka</button>
       <button class="btn-primary" id="btn2" disabled onclick="goTo(3)">Nästa →</button>
     </div>
   </div>
 
-  <!-- STEP 3: LEKTIONSFOKUS -->
+  <!-- STEP 3 -->
   <div class="card hidden" id="step3">
     <div class="card-title">Lektionsfokus</div>
     <div class="card-desc">Välj vad lektionen ska fokusera på. Du kan välja flera.</div>
-
     <div class="field">
       <div class="field-label">Typ av lektion</div>
       <div class="chips" id="chips-fokus">
@@ -565,57 +302,51 @@
         <span class="chip" data-val="Hörförståelse" onclick="toggleFokus(this)">Hörförståelse</span>
       </div>
     </div>
-
     <div class="field">
       <div class="field-label">Lektionslängd</div>
       <div class="chips" id="chips-langd">
-        <span class="chip" data-val="40 minuter" onclick="selectChip(this, 'langd')">40 min</span>
-        <span class="chip" data-val="60 minuter" onclick="selectChip(this, 'langd')">60 min</span>
-        <span class="chip" data-val="80 minuter" onclick="selectChip(this, 'langd')">80 min</span>
+        <span class="chip" data-val="40 minuter" onclick="selectChip(this,'langd')">40 min</span>
+        <span class="chip" data-val="60 minuter" onclick="selectChip(this,'langd')">60 min</span>
+        <span class="chip" data-val="80 minuter" onclick="selectChip(this,'langd')">80 min</span>
       </div>
     </div>
-
     <div class="field">
       <div class="field-label">Tema / Ämnesinnehåll (valfritt)</div>
-      <input class="text-input" id="input-tema" type="text" placeholder="t.ex. hållbarhet, identitet, samhälle...">
+      <input class="text-input" id="input-tema" type="text" placeholder="t.ex. hållbarhet, identitet, framtidsdrömmar...">
     </div>
-
     <div class="btn-row">
       <button class="btn-secondary" onclick="goTo(2)">← Tillbaka</button>
-      <button class="btn-primary" id="btn3" disabled onclick="generate()">Generera lektionsplan ✦</button>
+      <button class="btn-primary" id="btn3" disabled onclick="generate()">Skapa lektion ✦</button>
     </div>
   </div>
 
-  <!-- STEP 4: RESULT -->
+  <!-- STEP 4 -->
   <div class="hidden" id="step4">
     <div id="result-area">
       <div class="loading-area" id="loading">
         <div class="spinner"></div>
-        <div class="loading-text">Skapar din lektionsplan…</div>
+        <div class="loading-text">Skapar din kompletta lektion…</div>
+        <div class="loading-sub">Text, frågor, ordlista och lärarguide genereras</div>
       </div>
       <div class="hidden" id="result-content-wrap">
-        <div class="result-header">
+        <div class="result-topbar">
           <div>
-            <div class="card-title" id="result-title">Lektionsplan</div>
-            <div class="result-meta" id="result-meta"></div>
+            <div class="result-topbar-title" id="result-title">Lektion</div>
+            <div class="result-tags" id="result-tags"></div>
           </div>
           <button class="btn-print" onclick="window.print()">🖨 Skriv ut</button>
         </div>
-        <div class="result-content" id="result-text"></div>
-        <div class="btn-row" style="margin-top:28px;">
-          <button class="btn-primary" onclick="reset()">← Ny lektionsplan</button>
+        <div class="result-body" id="result-sections"></div>
+        <div class="btn-row-result">
+          <button class="btn-primary" onclick="reset()">← Ny lektion</button>
         </div>
       </div>
     </div>
   </div>
-
 </main>
 
 <script>
-  const state = {
-    kurs: '', tid: '', niva: '', modersmal: '', klass: '',
-    fokus: [], langd: '', tema: ''
-  };
+  const state = { kurs:'', tid:'', niva:'', modersmal:'', klass:'', fokus:[], langd:'', tema:'' };
 
   function selectKurs(el) {
     document.querySelectorAll('.kurs-card').forEach(c => c.classList.remove('selected'));
@@ -625,45 +356,31 @@
   }
 
   function selectChip(el, key) {
-    const group = el.closest('.chips');
-    group.querySelectorAll('.chip').forEach(c => c.classList.remove('selected', 'selected-gold'));
+    el.closest('.chips').querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
     state[key] = el.dataset.val;
-    checkStep2();
-    checkStep3();
+    checkStep2(); checkStep3();
   }
 
   function toggleFokus(el) {
     el.classList.toggle('selected');
     const val = el.dataset.val;
-    if (el.classList.contains('selected')) {
-      state.fokus.push(val);
-    } else {
-      state.fokus = state.fokus.filter(v => v !== val);
-    }
+    if (el.classList.contains('selected')) state.fokus.push(val);
+    else state.fokus = state.fokus.filter(v => v !== val);
     checkStep3();
   }
 
-  function checkStep2() {
-    document.getElementById('btn2').disabled = !(state.tid && state.niva);
-  }
-
-  function checkStep3() {
-    document.getElementById('btn3').disabled = !(state.fokus.length > 0 && state.langd);
-  }
+  function checkStep2() { document.getElementById('btn2').disabled = !(state.tid && state.niva); }
+  function checkStep3() { document.getElementById('btn3').disabled = !(state.fokus.length > 0 && state.langd); }
 
   function goTo(n) {
-    [1,2,3,4].forEach(i => {
-      document.getElementById('step' + i)?.classList.add('hidden');
-    });
+    [1,2,3].forEach(i => document.getElementById('step'+i)?.classList.add('hidden'));
     document.getElementById('step4')?.classList.add('hidden');
-    if (n <= 4) document.getElementById('step' + n).classList.remove('hidden');
-
-    // update step indicator
+    if (n <= 3) document.getElementById('step'+n).classList.remove('hidden');
     for (let i = 1; i <= 4; i++) {
-      const sc = document.getElementById('sc' + i);
-      const sl = document.getElementById('sl' + i);
-      sc.classList.remove('active', 'done');
+      const sc = document.getElementById('sc'+i);
+      const sl = document.getElementById('sl'+i);
+      sc.classList.remove('active','done');
       if (sl) sl.classList.remove('done');
       if (i < n) { sc.classList.add('done'); if (sl) sl.classList.add('done'); }
       else if (i === n) sc.classList.add('active');
@@ -675,79 +392,127 @@
     state.klass = document.getElementById('input-klass').value;
     state.tema = document.getElementById('input-tema').value;
 
-    goTo(4);
+    [1,2,3].forEach(i => document.getElementById('step'+i).classList.add('hidden'));
     document.getElementById('step4').classList.remove('hidden');
     document.getElementById('loading').classList.remove('hidden');
     document.getElementById('result-content-wrap').classList.add('hidden');
 
-    const prompt = buildPrompt();
+    for (let i = 1; i <= 4; i++) {
+      const sc = document.getElementById('sc'+i);
+      const sl = document.getElementById('sl'+i);
+      sc.classList.remove('active','done');
+      if (sl) sl.classList.remove('done');
+      if (i < 4) { sc.classList.add('done'); if (sl) sl.classList.add('done'); }
+      else sc.classList.add('active');
+    }
 
+    const prompt = buildPrompt();
     try {
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt })
       });
-
       const data = await response.json();
-      const text = data.result || 'Kunde inte generera lektionsplan.';
+      const text = data.result || 'Kunde inte generera lektion.';
 
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('result-content-wrap').classList.remove('hidden');
+      document.getElementById('result-title').textContent = `Lektion – ${state.kurs}`;
 
-      document.getElementById('result-title').textContent = `Lektionsplan – ${state.kurs}`;
+      const tags = document.getElementById('result-tags');
+      tags.innerHTML = '';
+      [state.kurs, state.tid, state.niva, ...state.fokus, state.langd, state.tema]
+        .filter(Boolean).forEach(t => {
+          const s = document.createElement('span');
+          s.className = 'result-tag'; s.textContent = t; tags.appendChild(s);
+        });
 
-      const meta = document.getElementById('result-meta');
-      meta.innerHTML = '';
-      const tags = [state.kurs, state.tid, state.niva, ...state.fokus, state.langd];
-      tags.filter(Boolean).forEach(t => {
-        const span = document.createElement('span');
-        span.className = 'meta-tag';
-        span.textContent = t;
-        meta.appendChild(span);
-      });
-
-      document.getElementById('result-text').innerHTML = formatText(text);
-
+      renderSections(text);
     } catch (err) {
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('result-content-wrap').classList.remove('hidden');
-      document.getElementById('result-text').textContent = 'Ett fel inträffade. Försök igen.';
+      document.getElementById('result-sections').innerHTML = '<div style="padding:24px;color:#c00;">Ett fel inträffade. Försök igen.</div>';
     }
   }
 
   function buildPrompt() {
-    let p = `Skapa en lektionsplan för ${state.kurs} på gymnasiet.\n\n`;
+    let p = `Skapa en KOMPLETT lektion för ${state.kurs} på gymnasiet.\n\n`;
     p += `Elevprofil:\n- Tid i Sverige: ${state.tid}\n- Nivå: ${state.niva}\n`;
     if (state.modersmal) p += `- Modersmål: ${state.modersmal}\n`;
     if (state.klass) p += `- Klassinfo: ${state.klass}\n`;
     p += `\nLektionsfokus: ${state.fokus.join(', ')}\n`;
     p += `Lektionslängd: ${state.langd}\n`;
-    if (state.tema) p += `Tema/ämnesinnehåll: ${state.tema}\n`;
-    p += `\nAnpassa lektionsplanen specifikt till ${state.kurs}:s kursmål i Gy11. Inkludera konkreta övningar, tidsfördelning och differentieringsstrategier.`;
+    if (state.tema) p += `Tema: ${state.tema}\n`;
+    p += `\nLektionen ska vara klar att använda direkt i klassrummet. Anpassa textnivå, ordförråd och uppgifter exakt till elevprofilen och ${state.kurs}:s kursmål i Gy11.`;
     return p;
   }
 
-  function formatText(text) {
+  const sectionDefs = [
+    { key: '📖 Lektionstext',    cls: 'sec-text',      icon: '📖', title: 'Lektionstext' },
+    { key: '❓ Förståelsefrågor', cls: 'sec-questions', icon: '❓', title: 'Förståelsefrågor' },
+    { key: '📚 Ordlista',        cls: 'sec-vocab',     icon: '📚', title: 'Ordlista' },
+    { key: '✍️ Skrivuppgift',    cls: 'sec-writing',   icon: '✍️', title: 'Skrivuppgift' },
+    { key: '👩‍🏫 Lärarguide',     cls: 'sec-teacher',   icon: '👩‍🏫', title: 'Lärarguide' },
+  ];
+
+  function renderSections(text) {
+    const container = document.getElementById('result-sections');
+    container.innerHTML = '';
+
+    // Split by ## headers
+    const parts = text.split(/^## /m).filter(Boolean);
+    const parsed = {};
+    parts.forEach(part => {
+      const lines = part.split('\n');
+      const header = lines[0].trim();
+      const content = lines.slice(1).join('\n').trim();
+      parsed[header] = content;
+    });
+
+    sectionDefs.forEach(def => {
+      // Find matching key (partial match)
+      const matchKey = Object.keys(parsed).find(k => k.includes(def.title) || def.key.includes(k.split(' ').slice(1).join(' ')));
+      const content = matchKey ? parsed[matchKey] : null;
+      if (!content) return;
+
+      const section = document.createElement('div');
+      section.className = `section ${def.cls}`;
+      section.innerHTML = `
+        <div class="section-header">
+          <div class="section-icon">${def.icon}</div>
+          <div class="section-title">${def.title}</div>
+        </div>
+        <div class="section-text">${formatContent(content)}</div>
+      `;
+      container.appendChild(section);
+    });
+
+    // Fallback if parsing fails
+    if (container.children.length === 0) {
+      container.innerHTML = `<div class="section"><div class="section-text">${formatContent(text)}</div></div>`;
+    }
+  }
+
+  function formatContent(text) {
     return text
-      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^### (.+)$/gm, '<strong>$1</strong>')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\n/g, '<br>');
+      .replace(/^(\d+\..+)$/gm, '<li>$1</li>')
+      .replace(/^[-•] (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g, m => `<ol>${m}</ol>`)
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>')
+      .replace(/^(?!<)/, '<p>')
+      .replace(/(?<!>)$/, '</p>');
   }
 
   function reset() {
-    state.kurs = ''; state.tid = ''; state.niva = '';
-    state.modersmal = ''; state.klass = '';
-    state.fokus = []; state.langd = ''; state.tema = '';
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected', 'selected-gold'));
+    Object.assign(state, { kurs:'', tid:'', niva:'', modersmal:'', klass:'', fokus:[], langd:'', tema:'' });
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
     document.querySelectorAll('.kurs-card').forEach(c => c.classList.remove('selected'));
-    document.getElementById('btn1').disabled = true;
-    document.getElementById('btn2').disabled = true;
-    document.getElementById('btn3').disabled = true;
-    document.getElementById('input-modersmal').value = '';
-    document.getElementById('input-klass').value = '';
-    document.getElementById('input-tema').value = '';
+    ['btn1','btn2','btn3'].forEach(id => document.getElementById(id).disabled = true);
+    ['input-modersmal','input-klass','input-tema'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('step4').classList.add('hidden');
     goTo(1);
   }
