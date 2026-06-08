@@ -26,11 +26,17 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Anthropic error:', JSON.stringify(data));
+      return res.status(200).json({ result: `Fel från API: ${data.error?.message || JSON.stringify(data)}` });
+    }
+
     const text = data.content?.[0]?.text || 'Kunde inte generera lektionsplan.';
     res.status(200).json({ result: text });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Server error:', err);
+    res.status(500).json({ error: 'Server error: ' + err.message });
   }
 }
