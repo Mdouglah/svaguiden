@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1500,
         system: `Du är en erfaren SVA-lärare och pedagogisk expert på gymnasienivå i Sverige. Du skapar detaljerade, praktiska lektionsplaner anpassade för SVA-elever på gymnasiet enligt Gy11. Svara alltid på svenska. Använd tydliga rubriker med ## och ###. Strukturera alltid lektionsplanen med: Syfte & mål, Koppling till Gy11, Lektionsstruktur (med tider), Övningar & material, Differentiering, och Bedömning.`,
         messages: [{ role: 'user', content: prompt }]
