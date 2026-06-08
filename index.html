@@ -683,19 +683,14 @@
     const prompt = buildPrompt();
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `Du är en erfaren SVA-lärare och pedagogisk expert på gymnasienivå i Sverige. Du skapar detaljerade, praktiska lektionsplaner anpassade för SVA-elever på gymnasiet enligt Gy11. Svara alltid på svenska. Använd tydliga rubriker med ## och ###. Strukturera alltid lektionsplanen med: Syfte & mål, Koppling till Gy11, Lektionsstruktur (med tider), Övningar & material, Differentiering, och Bedömning.`,
-          messages: [{ role: 'user', content: prompt }]
-        })
+        body: JSON.stringify({ prompt })
       });
 
       const data = await response.json();
-      const text = data.content?.[0]?.text || 'Kunde inte generera lektionsplan.';
+      const text = data.result || 'Kunde inte generera lektionsplan.';
 
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('result-content-wrap').classList.remove('hidden');
