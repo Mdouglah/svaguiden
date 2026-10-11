@@ -4,9 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SVAGuiden – Kompletta lektioner för gymnasiet</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* Lokala typsnitt (inga externa anrop) */
+@font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/dm-sans-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/dm-sans-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/dm-sans-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Newsreader'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/newsreader-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Newsreader'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/newsreader-latin-400-italic.woff2') format('woff2'); }
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.field-note { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
 
 :root {
   --navy: #1a3a5c;
@@ -27,7 +34,7 @@
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   background: var(--cream);
   color: var(--text);
   min-height: 100vh;
@@ -55,7 +62,7 @@ body {
   background: linear-gradient(135deg, var(--gold-bright), var(--gold));
   border-radius: 20px;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Newsreader', serif;
   font-size: 22px; color: var(--white);
   margin: 0 auto 20px;
   box-shadow: 0 8px 32px rgba(212,144,10,0.35);
@@ -63,7 +70,7 @@ body {
 }
 
 .hero h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Newsreader', serif;
   font-size: clamp(28px, 5vw, 40px);
   color: var(--white);
   letter-spacing: -0.5px;
@@ -84,7 +91,7 @@ body {
   border: 1px solid rgba(255,255,255,0.18);
   color: #b0cfe0;
   padding: 8px 20px; border-radius: 24px;
-  font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px; font-family: 'DM Sans', sans-serif;
   text-decoration: none; cursor: pointer;
   transition: all 0.2s;
   position: relative; z-index: 1;
@@ -132,7 +139,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
   margin-bottom: 6px;
 }
 .card-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Newsreader', serif;
   font-size: 24px; color: var(--navy);
   margin-bottom: 6px;
 }
@@ -154,7 +161,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
 .kurs-card.selected { border-color: var(--navy); background: linear-gradient(135deg, #f0f5fb, #e8f0f8); box-shadow: 0 4px 16px rgba(26,58,92,0.12); }
 
 .kurs-num {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Newsreader', serif;
   font-size: 36px; color: var(--navy); line-height: 1; margin-bottom: 4px;
 }
 .kurs-card.selected .kurs-num { color: var(--navy-dark); }
@@ -173,7 +180,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
   padding: 8px 18px; border-radius: 50px;
   border: 1.5px solid var(--border); background: var(--white);
   color: var(--text-muted); font-size: 13px; font-weight: 500;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   cursor: pointer; transition: all 0.18s; user-select: none;
 }
 .chip:hover { border-color: var(--navy-mid); color: var(--navy); background: #f0f5fb; }
@@ -181,7 +188,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
 
 .text-input {
   width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-  padding: 11px 16px; font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 11px 16px; font-size: 14px; font-family: 'DM Sans', sans-serif;
   color: var(--text); background: var(--white); outline: none; transition: all 0.18s;
 }
 .text-input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(26,58,92,0.08); }
@@ -192,7 +199,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
   background: linear-gradient(135deg, var(--navy-mid), var(--navy-dark));
   color: var(--white); border: none; border-radius: var(--radius-sm);
   padding: 13px 28px; font-size: 15px; font-weight: 600;
-  font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; cursor: pointer;
   transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
   box-shadow: 0 4px 14px rgba(26,58,92,0.25);
 }
@@ -203,7 +210,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
   background: linear-gradient(135deg, var(--gold-bright), var(--gold));
   color: var(--white); border: none; border-radius: var(--radius-sm);
   padding: 15px 32px; font-size: 16px; font-weight: 700;
-  font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; cursor: pointer;
   transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px;
   box-shadow: 0 4px 20px rgba(212,144,10,0.35); letter-spacing: 0.2px;
 }
@@ -213,7 +220,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
 .btn-secondary {
   background: transparent; color: var(--text-muted);
   border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-  padding: 12px 24px; font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 12px 24px; font-size: 14px; font-family: 'DM Sans', sans-serif;
   cursor: pointer; transition: all 0.18s;
 }
 .btn-secondary:hover { border-color: var(--navy-mid); color: var(--navy); background: #f0f5fb; }
@@ -235,7 +242,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
   animation: spin 1s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-.loading-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 8px; }
+.loading-title { font-family: 'Newsreader', serif; font-size: 20px; color: var(--navy); margin-bottom: 8px; }
 .loading-sub { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
 /* ─── RESULT ───────────────────────────── */
@@ -249,12 +256,12 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
 .result-hero::after {
   content: 'SVA';
   position: absolute; right: -10px; bottom: -20px;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Newsreader', serif;
   font-size: 100px; color: rgba(255,255,255,0.04);
   line-height: 1; pointer-events: none;
 }
 .result-hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
-.result-title { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--white); }
+.result-title { font-family: 'Newsreader', serif; font-size: 24px; color: var(--white); }
 .result-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .result-tag {
   background: rgba(255,255,255,0.1); color: #b8d4ea;
@@ -264,7 +271,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
 .btn-print {
   background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
   color: #c8dff0; border-radius: var(--radius-sm); padding: 8px 16px;
-  font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+  font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer;
   display: flex; align-items: center; gap: 6px; transition: all 0.18s; white-space: nowrap;
 }
 .btn-print:hover { background: rgba(255,255,255,0.18); color: #fff; }
@@ -288,7 +295,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
   font-size: 20px; flex-shrink: 0;
 }
 
-.sec-label { font-family: 'Playfair Display', serif; font-size: 19px; }
+.sec-label { font-family: 'Newsreader', serif; font-size: 19px; }
 
 /* Color themes per section */
 .s-text   .sec-icon-wrap { background: #e8f4ff; }
@@ -332,11 +339,11 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
 .print-header-left { display: flex; align-items: center; gap: 12px; }
 .print-badge {
   background: var(--navy); color: white;
-  font-family: "Playfair Display", serif;
+  font-family: "Newsreader", serif;
   font-size: 13px; width: 36px; height: 36px;
   border-radius: 8px; display: flex; align-items: center; justify-content: center;
 }
-.print-app-name { font-family: "Playfair Display", serif; font-size: 18px; color: var(--navy); }
+.print-app-name { font-family: "Newsreader", serif; font-size: 18px; color: var(--navy); }
 .print-app-sub { font-size: 11px; color: var(--text-muted); }
 .print-date { font-size: 11px; color: var(--text-muted); text-align: right; }
 .print-footer {
@@ -386,7 +393,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
   <div class="hero-badge">SVA</div>
   <h1>SVAGuiden</h1>
   <p class="hero-tagline">Kompletta, klara lektioner · SVA Gymnasium · Gy11</p>
-  <a class="hero-feedback" href="mailto:mustafa.douglah@enkoping.se?subject=Feedback SVAGuiden">✉ Lämna feedback</a>
+  <a class="hero-feedback" href="mailto:kontakt@norvayapp.se?subject=Feedback SVAGuiden">✉ Lämna feedback</a>
 </div>
 
 <main>
@@ -464,6 +471,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
     <div class="field">
       <div class="field-label">Klassinfo (valfritt)</div>
       <input class="text-input" id="input-klass" type="text" placeholder="t.ex. blandad grupp, IM-program…">
+      <div class="field-note">Skriv inte in elevers namn eller andra personuppgifter.</div>
     </div>
     <div class="btn-row">
       <button class="btn-secondary" onclick="goTo(1)">← Tillbaka</button>
@@ -500,6 +508,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
     <div class="field">
       <div class="field-label">Tema / Ämnesinnehåll (valfritt)</div>
       <input class="text-input" id="input-tema" type="text" placeholder="t.ex. hållbarhet, identitet, framtidsdrömmar…">
+      <div class="field-note">Skriv inte in elevers namn eller andra personuppgifter.</div>
     </div>
     <div class="btn-row">
       <button class="btn-secondary" onclick="goTo(2)">← Tillbaka</button>
