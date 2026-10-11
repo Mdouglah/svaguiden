@@ -466,11 +466,11 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
     </div>
     <div class="field">
       <div class="field-label">Modersmål (valfritt)</div>
-      <input class="text-input" id="input-modersmal" type="text" placeholder="t.ex. arabiska, somaliska, dari…">
+      <input class="text-input" id="input-modersmal" type="text" maxlength="150" placeholder="t.ex. arabiska, somaliska, dari…">
     </div>
     <div class="field">
       <div class="field-label">Klassinfo (valfritt)</div>
-      <input class="text-input" id="input-klass" type="text" placeholder="t.ex. blandad grupp, IM-program…">
+      <input class="text-input" id="input-klass" type="text" maxlength="150" placeholder="t.ex. blandad grupp, IM-program…">
       <div class="field-note">Skriv inte in elevers namn eller andra personuppgifter.</div>
     </div>
     <div class="btn-row">
@@ -507,7 +507,7 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
     </div>
     <div class="field">
       <div class="field-label">Tema / Ämnesinnehåll (valfritt)</div>
-      <input class="text-input" id="input-tema" type="text" placeholder="t.ex. hållbarhet, identitet, framtidsdrömmar…">
+      <input class="text-input" id="input-tema" type="text" maxlength="150" placeholder="t.ex. hållbarhet, identitet, framtidsdrömmar…">
       <div class="field-note">Skriv inte in elevers namn eller andra personuppgifter.</div>
     </div>
     <div class="btn-row">
@@ -628,10 +628,14 @@ async function generate() {
     const response = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: buildPrompt() })
+      // Bara lärarens val skickas – frågan till AI:n byggs på servern
+      body: JSON.stringify({
+        kurs: state.kurs, tid: state.tid, niva: state.niva, langd: state.langd, fokus: state.fokus,
+        modersmal: state.modersmal, klass: state.klass, tema: state.tema
+      })
     });
     const data = await response.json();
-    const text = data.result || 'Kunde inte generera lektion.';
+    const text = data.result || data.error || 'Kunde inte generera lektion.';
 
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('result-wrap').classList.remove('hidden');
@@ -655,17 +659,6 @@ async function generate() {
     document.getElementById('result-wrap').classList.remove('hidden');
     document.getElementById('result-sections').innerHTML = '<div style="padding:28px;color:#c00;font-size:14px;">Ett fel inträffade. Försök igen.</div>';
   }
-}
-
-function buildPrompt() {
-  let p = `Skapa en KOMPLETT lektion för ${state.kurs} på gymnasiet.\n\n`;
-  p += `Elevprofil:\n- Tid i Sverige: ${state.tid}\n- Nivå: ${state.niva}\n`;
-  if (state.modersmal) p += `- Modersmål: ${state.modersmal}\n`;
-  if (state.klass) p += `- Klassinfo: ${state.klass}\n`;
-  p += `\nLektionsfokus: ${state.fokus.join(', ')}\nLektionslängd: ${state.langd}\n`;
-  if (state.tema) p += `Tema: ${state.tema}\n`;
-  p += `\nLektionen ska vara klar att använda direkt i klassrummet. Anpassa textnivå, ordförråd och uppgifter exakt till elevprofilen och ${state.kurs}:s kursmål i Gy11.`;
-  return p;
 }
 
 const sectionDefs = [
