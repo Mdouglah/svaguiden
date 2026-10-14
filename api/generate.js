@@ -170,4 +170,42 @@ export default async function handler(req, res) {
     TIDER.includes(val.tid) &&
     NIVAER.includes(val.niva) &&
     LANGDER.includes(val.langd) &&
-    Array.isArray(val.fokus) && val.fokus.length > 0
+    Array.isArray(val.fokus) && val.fokus.length > 0 && val.fokus.length <= FOKUS.length &&
+    val.fokus.every((f) => FOKUS.includes(f)) &&
+    val.modersmal !== null && val.klass !== null && val.tema !== null;
+
+  if (!giltigt) {
+    return res.status(400).json({ error: `Kontrollera dina val. Fritextfälten får vara högst ${MAX_FRITEXT} tecken.` });
+  }
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: MAX_TOKENS,
+        system: systemFor(val.stadium),
+        messages: [{ role: 'user', content: byggFraga(val) }]
+      })
+    });
+
+    if (!response.ok) {
+      // Detaljerna loggas på servern (syns i Vercels loggar), inget känsligt till besökaren
+      console.error('Anthropic-fel:', response.status, await response.text());
+      return res.status(502).json({ error: 'AI-tjänsten svarade inte. Försök igen om en stund.' });
+    }
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text || 'Kunde inte generera lektion.';
+    return res.status(200).json({ result: text });
+
+  } catch (err) {
+    console.error('Serverfel:', err);
+    return res.status(500).json({ error: 'Något gick fel. Försök igen.' });
+  }
+}
