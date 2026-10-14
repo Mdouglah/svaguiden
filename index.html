@@ -547,4 +547,415 @@ main { max-width: 680px; margin: 0 auto; padding: 32px 16px 80px; }
       <div class="field-note">Skriv inte in elevers namn eller andra personuppgifter.</div>
     </div>
     <div class="btn-row">
-      <button
+      <button class="btn-secondary" onclick="goTo(1)">← Tillbaka</button>
+      <button class="btn-primary" id="btn2" disabled onclick="goTo(3)">Nästa →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="card hidden" id="step3">
+    <div class="card-eyebrow">Steg 3 av 3</div>
+    <div class="card-title">Lektionsfokus</div>
+    <div class="card-desc">Välj innehåll och längd – sedan skapar vi hela lektionen åt dig.</div>
+    <div class="field">
+      <div class="field-label">Typ av lektion (välj en eller flera)</div>
+      <div class="chips" data-grupp="fokus">
+        <span class="chip" data-val="Läsförståelse" onclick="toggleFokus(this)">Läsförståelse</span>
+        <span class="chip" data-val="Skrivuppgift" onclick="toggleFokus(this)">Skrivuppgift</span>
+        <span class="chip" data-val="Muntlig kommunikation" onclick="toggleFokus(this)">Muntlig kommunikation</span>
+        <span class="chip hidden" data-val="Bokstäver & ljud" data-bara="Åk 1–3" onclick="toggleFokus(this)">Bokstäver & ljud</span>
+        <span class="chip" data-val="Grammatik & struktur" onclick="toggleFokus(this)">Grammatik & struktur</span>
+        <span class="chip" data-val="Ordförråd & fraser" onclick="toggleFokus(this)">Ordförråd & fraser</span>
+        <span class="chip" data-val="Litteratur & textanalys" data-ej="Åk 1–3" onclick="toggleFokus(this)">Litteratur & textanalys</span>
+        <span class="chip" data-val="Argumentation" data-ej="Åk 1–3" onclick="toggleFokus(this)">Argumentation</span>
+        <span class="chip" data-val="Hörförståelse" onclick="toggleFokus(this)">Hörförståelse</span>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Lektionslängd</div>
+      <div class="chips">
+        <span class="chip" data-val="30 minuter" onclick="selectChip(this,'langd')">30 min</span>
+        <span class="chip" data-val="40 minuter" onclick="selectChip(this,'langd')">40 min</span>
+        <span class="chip" data-val="60 minuter" onclick="selectChip(this,'langd')">60 min</span>
+        <span class="chip" data-val="80 minuter" onclick="selectChip(this,'langd')">80 min</span>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Tema / Ämnesinnehåll (valfritt)</div>
+      <input class="text-input" id="input-tema" type="text" maxlength="150" placeholder="t.ex. djur, familjen, hållbarhet, framtidsdrömmar…">
+      <div class="field-note">Skriv inte in elevers namn eller andra personuppgifter.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goTo(2)">← Tillbaka</button>
+      <button class="btn-generate" id="btn3" disabled onclick="generate()">✦ Skapa komplett lektion</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: LOADING -->
+  <div class="loading-wrap hidden" id="loading">
+    <div class="spinner-ring"></div>
+    <div class="loading-title">Skapar din lektion…</div>
+    <div class="loading-sub">Genererar text, förståelsefrågor,<br>ordlista och lärarguide</div>
+  </div>
+
+  <!-- STEP 4: RESULT -->
+  <div class="result-wrap hidden" id="result-wrap">
+    <!-- Utskriftshuvud -->
+    <div class="print-header" id="print-header">
+      <div class="print-header-left">
+        <div class="print-badge">SVA</div>
+        <div>
+          <div class="print-app-name">SVAGuiden</div>
+          <div class="print-app-sub">Kompletta lektioner · Svenska som andraspråk · Åk 1–9 och gymnasiet</div>
+        </div>
+      </div>
+      <div class="print-date" id="print-date"></div>
+    </div>
+
+    <div class="result-hero">
+      <div class="result-hero-top">
+        <div class="result-title" id="result-title">Lektion</div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn-print btn-pdf" onclick="savePDF()">📄 PDF</button>
+          <button class="btn-print" onclick="window.print()">🖨 Skriv ut</button>
+        </div>
+      </div>
+      <div class="result-tags" id="result-tags"></div>
+    </div>
+    <div class="result-sections" id="result-sections"></div>
+
+    <!-- Utskriftssidfot -->
+    <div class="print-footer">
+      Genererad av SVAGuiden · svaguiden.vercel.app · Lektionen är AI-genererad och bör granskas av läraren
+    </div>
+
+    <div class="result-footer">
+      <button class="btn-primary" onclick="reset()">← Ny lektion</button>
+      <button class="btn-secondary" onclick="window.print()">🖨 Skriv ut</button>
+      <button class="btn-secondary" onclick="savePDF()">📄 Spara PDF</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const state = { stadium:'', laroplan:'', steg:'', tid:'', niva:'', modersmal:'', klass:'', fokus:[], langd:'', tema:'' };
+
+// Visningsnamn för valt stadium (används i rubrik och på utskriften)
+function kursLabel() {
+  if (state.stadium !== 'Gymnasiet') return state.stadium;
+  return state.laroplan === 'Gy25'
+    ? 'Gymnasiet · nivå ' + state.steg + ' (Gy25)'
+    : 'Gymnasiet · SVA ' + state.steg + ' (Gy11)';
+}
+
+function selectStadium(el) {
+  document.querySelectorAll('.kurs-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.stadium = el.dataset.stadium;
+  const gym = state.stadium === 'Gymnasiet';
+  document.getElementById('gym-val').classList.toggle('hidden', !gym);
+  if (!gym) {
+    state.laroplan = ''; state.steg = '';
+    document.querySelectorAll('#gym-val .chip').forEach(c => c.classList.remove('selected'));
+  }
+  anpassaFokus();
+  checkStep1();
+}
+
+function selectGym(el, key) {
+  el.closest('.chips').querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state[key] = el.dataset.val;
+  checkStep1();
+}
+
+function selectChip(el, key) {
+  el.closest('.chips').querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state[key] = el.dataset.val;
+  checkStep2(); checkStep3();
+}
+
+function toggleFokus(el) {
+  el.classList.toggle('selected');
+  const val = el.dataset.val;
+  if (el.classList.contains('selected')) state.fokus.push(val);
+  else state.fokus = state.fokus.filter(v => v !== val);
+  checkStep3();
+}
+
+// Visar bara de lektionstyper som passar valt stadium
+function anpassaFokus() {
+  document.querySelectorAll('[data-grupp="fokus"] .chip').forEach(c => {
+    const dold = (c.dataset.ej && c.dataset.ej === state.stadium) || (c.dataset.bara && c.dataset.bara !== state.stadium);
+    c.classList.toggle('hidden', !!dold);
+    if (dold && c.classList.contains('selected')) {
+      c.classList.remove('selected');
+      state.fokus = state.fokus.filter(v => v !== c.dataset.val);
+    }
+  });
+  checkStep3();
+}
+
+function checkStep1() {
+  const ok = state.stadium && (state.stadium !== 'Gymnasiet' || (state.laroplan && state.steg));
+  document.getElementById('btn1').disabled = !ok;
+}
+function checkStep2() { document.getElementById('btn2').disabled = !(state.tid && state.niva); }
+function checkStep3() { document.getElementById('btn3').disabled = !(state.fokus.length > 0 && state.langd); }
+
+function goTo(n) {
+  [1,2,3].forEach(i => document.getElementById('step'+i).classList.add('hidden'));
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('result-wrap').classList.add('hidden');
+  if (n <= 3) document.getElementById('step'+n).classList.remove('hidden');
+  for (let i = 1; i <= 4; i++) {
+    const sc = document.getElementById('sc'+i);
+    const sl = document.getElementById('sl'+i);
+    sc.classList.remove('active','done');
+    if (sl) sl.classList.remove('done');
+    if (i < n) { sc.classList.add('done'); if (sl) sl.classList.add('done'); }
+    else if (i === n) sc.classList.add('active');
+  }
+}
+
+async function generate() {
+  state.modersmal = document.getElementById('input-modersmal').value;
+  state.klass = document.getElementById('input-klass').value;
+  state.tema = document.getElementById('input-tema').value;
+
+  [1,2,3].forEach(i => document.getElementById('step'+i).classList.add('hidden'));
+  document.getElementById('loading').classList.remove('hidden');
+  document.getElementById('result-wrap').classList.add('hidden');
+
+  for (let i = 1; i <= 4; i++) {
+    const sc = document.getElementById('sc'+i);
+    const sl = document.getElementById('sl'+i);
+    sc.classList.remove('active','done');
+    if (sl) sl.classList.remove('done');
+    if (i < 4) { sc.classList.add('done'); if (sl) sl.classList.add('done'); }
+    else sc.classList.add('active');
+  }
+
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // Bara lärarens val skickas – frågan till AI:n byggs på servern
+      body: JSON.stringify({
+        stadium: state.stadium, laroplan: state.laroplan, steg: state.steg,
+        tid: state.tid, niva: state.niva, langd: state.langd, fokus: state.fokus,
+        modersmal: state.modersmal, klass: state.klass, tema: state.tema
+      })
+    });
+    const data = await response.json();
+    const text = data.result || data.error || 'Kunde inte generera lektion.';
+
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('result-wrap').classList.remove('hidden');
+    document.getElementById('result-title').textContent = 'Lektion – ' + kursLabel();
+    // Set print date
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('sv-SE', { year:'numeric', month:'long', day:'numeric' });
+    document.getElementById('print-date').innerHTML = dateStr + '<br>' + mdSaker(kursLabel()) + ' · ' + mdSaker(state.niva);
+
+    const tags = document.getElementById('result-tags');
+    tags.innerHTML = '';
+    [kursLabel(), state.tid, state.niva, ...state.fokus, state.langd, state.tema]
+      .filter(Boolean).forEach(t => {
+        const s = document.createElement('span');
+        s.className = 'result-tag'; s.textContent = t; tags.appendChild(s);
+      });
+
+    renderSections(text);
+  } catch(err) {
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('result-wrap').classList.remove('hidden');
+    document.getElementById('result-sections').innerHTML = '<div style="padding:28px;color:#c00;font-size:14px;">Ett fel inträffade. Försök igen.</div>';
+  }
+}
+
+const sectionDefs = [
+  { match: 'Lektionstext',     cls: 's-text',    icon: '📖', label: 'Lektionstext' },
+  { match: 'Förståelsefrågor', cls: 's-q',       icon: '❓', label: 'Förståelsefrågor' },
+  { match: 'Ordlista',         cls: 's-vocab',   icon: '📚', label: 'Ordlista' },
+  { match: 'Skrivuppgift',     cls: 's-write',   icon: '✍️', label: 'Skrivuppgift' },
+  { match: 'Lärarguide',       cls: 's-teacher', icon: '👩‍🏫', label: 'Lärarguide' },
+];
+
+function renderSections(raw) {
+  const container = document.getElementById('result-sections');
+  container.innerHTML = '';
+
+  const parts = raw.split(/^## /m).filter(Boolean);
+  const parsed = {};
+  parts.forEach(p => {
+    const nl = p.indexOf('\n');
+    const header = p.slice(0, nl).trim();
+    const body = p.slice(nl+1).trim();
+    parsed[header] = body;
+  });
+
+  sectionDefs.forEach(def => {
+    const key = Object.keys(parsed).find(k => k.includes(def.match));
+    if (!key) return;
+    const content = parsed[key];
+
+    const sec = document.createElement('div');
+    sec.className = `lesson-section ${def.cls}`;
+
+    let bodyHtml;
+    if (def.match === 'Ordlista') {
+      bodyHtml = renderVocab(content);
+    } else {
+      bodyHtml = `<div class="sec-body">${formatText(content)}</div>`;
+    }
+
+    sec.innerHTML = `
+      <div class="sec-head">
+        <div class="sec-icon-wrap">${def.icon}</div>
+        <div class="sec-label">${def.label}</div>
+      </div>
+      ${bodyHtml}
+    `;
+    container.appendChild(sec);
+  });
+
+  if (container.children.length === 0) {
+    container.innerHTML = `<div class="lesson-section"><div class="sec-body">${formatText(raw)}</div></div>`;
+  }
+}
+
+function renderVocab(text) {
+  const lines = text.split('\n').filter(l => l.trim());
+  let html = '<div>';
+  lines.forEach(line => {
+    const match = line.match(/\*\*(.+?)\*\*\s*[–-]\s*(.+)/);
+    if (match) {
+      html += `<div class="vocab-entry"><span class="vocab-word">${mdSaker(match[1])}</span><span class="vocab-def">${mdSaker(match[2])}</span></div>`;
+    } else if (line.trim()) {
+      const plain = line.replace(/^\d+\.\s*/, '').replace(/\*\*/g,'');
+      const dashIdx = plain.search(/\s[–-]\s/);
+      if (dashIdx > -1) {
+        html += `<div class="vocab-entry"><span class="vocab-word">${mdSaker(plain.slice(0,dashIdx))}</span><span class="vocab-def">${mdSaker(plain.slice(dashIdx+3))}</span></div>`;
+      } else {
+        html += `<div class="vocab-entry"><span class="vocab-def">${mdSaker(plain)}</span></div>`;
+      }
+    }
+  });
+  html += '</div>';
+  return html;
+}
+
+// ─── Visar AI-svar med riktiga rubriker, fetstil och listor i stället för tecknen # och ** ───
+// Samma regler som Markdown.jsx i de andra apparna, skrivet som vanlig JavaScript.
+// All text görs säker (escapas) innan den läggs in på sidan.
+const MD_BORDER = 'color-mix(in srgb, currentColor 25%, transparent)';
+
+function mdSaker(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function mdInline(text) {
+  return String(text).split(/(\*\*[^*]+\*\*|\*[^*\s][^*]*\*|`[^`]+`)/g).filter(d => d !== '').map(d => {
+    if (/^\*\*[^*]+\*\*$/.test(d)) return `<strong>${mdSaker(d.slice(2, -2))}</strong>`;
+    if (/^\*[^*\s][^*]*\*$/.test(d)) return `<em>${mdSaker(d.slice(1, -1))}</em>`;
+    if (/^`[^`]+`$/.test(d)) return `<code>${mdSaker(d.slice(1, -1))}</code>`;
+    return mdSaker(d);
+  }).join('');
+}
+
+function mdRensaRubrik(t) {
+  return t.replace(/\*\*/g, '').replace(/\s*#+\s*$/, '').trim();
+}
+
+function mdCeller(rad) {
+  return rad.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+}
+
+function formatText(text) {
+  const rader = String(text || '').replace(/\r\n/g, '\n').split('\n');
+  const block = [];
+  let i = 0;
+
+  while (i < rader.length) {
+    const rad = rader[i];
+
+    if (rad.trim() === '') { i++; continue; }
+
+    if (/^\s*([-*_])\1{2,}\s*$/.test(rad)) {
+      block.push(`<hr style="border:0;border-top:1px solid ${MD_BORDER};margin:14px 0">`);
+      i++; continue;
+    }
+
+    const rub = rad.match(/^\s*(#{1,6})\s+(.*)$/);
+    if (rub) {
+      const niva = rub[1].length;
+      const storlek = niva === 1 ? '1.25em' : niva === 2 ? '1.15em' : '1.05em';
+      block.push(`<div role="heading" aria-level="${Math.min(niva + 2, 6)}" style="font-weight:700;font-size:${storlek};margin:16px 0 6px;line-height:1.3">${mdInline(mdRensaRubrik(rub[2]))}</div>`);
+      i++; continue;
+    }
+
+    if (/^\s*\|/.test(rad)) {
+      const tabell = [];
+      while (i < rader.length && /^\s*\|/.test(rader[i])) { tabell.push(rader[i]); i++; }
+      const data = tabell.filter(r => !/^\s*\|?[\s:|-]+\|?\s*$/.test(r) || !/-/.test(r));
+      const [huvud, ...resten] = data;
+      const cell = `padding:6px 8px;border:1px solid ${MD_BORDER}`;
+      block.push(
+        `<div style="overflow-x:auto;margin:10px 0"><table style="border-collapse:collapse;width:100%;font-size:0.95em">` +
+        `<thead><tr>${mdCeller(huvud).map(c => `<th style="text-align:left;${cell}">${mdInline(c)}</th>`).join('')}</tr></thead>` +
+        `<tbody>${resten.map(r => `<tr>${mdCeller(r).map(c => `<td style="${cell};vertical-align:top">${mdInline(c)}</td>`).join('')}</tr>`).join('')}</tbody>` +
+        `</table></div>`
+      );
+      continue;
+    }
+
+    if (/^\s*[-*•]\s+/.test(rad)) {
+      const punkter = [];
+      while (i < rader.length && /^\s*[-*•]\s+/.test(rader[i])) { punkter.push(rader[i].replace(/^\s*[-*•]\s+/, '')); i++; }
+      block.push(`<ul>${punkter.map(p => `<li>${mdInline(p)}</li>`).join('')}</ul>`);
+      continue;
+    }
+
+    if (/^\s*\d+[.)]\s+/.test(rad)) {
+      const punkter = [];
+      while (i < rader.length && /^\s*\d+[.)]\s+/.test(rader[i])) { punkter.push(rader[i].replace(/^\s*\d+[.)]\s+/, '')); i++; }
+      block.push(`<ol>${punkter.map(p => `<li>${mdInline(p)}</li>`).join('')}</ol>`);
+      continue;
+    }
+
+    const stycke = [];
+    while (
+      i < rader.length && rader[i].trim() !== '' &&
+      !/^\s*(#{1,6}\s|[-*•]\s|\d+[.)]\s|\|)/.test(rader[i]) &&
+      !/^\s*([-*_])\1{2,}\s*$/.test(rader[i])
+    ) { stycke.push(rader[i]); i++; }
+    block.push(`<p>${stycke.map(r => mdInline(r)).join('<br>')}</p>`);
+  }
+
+  return block.join('');
+}
+
+function savePDF() {
+  // Set print date before opening dialog
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('sv-SE', { year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('print-date').innerHTML = dateStr + '<br>' + mdSaker(kursLabel()) + ' · ' + mdSaker(state.niva);
+  window.print();
+}
+
+function reset() {
+  Object.assign(state, { stadium:'', laroplan:'', steg:'', tid:'', niva:'', modersmal:'', klass:'', fokus:[], langd:'', tema:'' });
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.kurs-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('gym-val').classList.add('hidden');
+  ['btn1','btn2','btn3'].forEach(id => document.getElementById(id).disabled = true);
+  ['input-modersmal','input-klass','input-tema'].forEach(id => document.getElementById(id).value = '');
+  anpassaFokus();
+  goTo(1);
+}
+</script>
+</body>
+</html>
