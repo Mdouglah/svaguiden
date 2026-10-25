@@ -195,8 +195,9 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      // Detaljerna loggas på servern (syns i Vercels loggar), inget känsligt till besökaren
-      console.error('Anthropic-fel:', response.status, await response.text());
+      // Logga bara statuskod och feltyp (syns i Vercels loggar), aldrig felmeddelandets text
+      const fel = await response.json().catch(() => null);
+      console.error('Anthropic-fel:', response.status, fel?.error?.type || 'okänd feltyp');
       return res.status(502).json({ error: 'AI-tjänsten svarade inte. Försök igen om en stund.' });
     }
 
@@ -205,7 +206,8 @@ export default async function handler(req, res) {
     return res.status(200).json({ result: text });
 
   } catch (err) {
-    console.error('Serverfel:', err);
+    // Bara feltypen, aldrig hela felobjektet
+    console.error('Serverfel:', err?.name || 'okänt fel');
     return res.status(500).json({ error: 'Något gick fel. Försök igen.' });
   }
 }
