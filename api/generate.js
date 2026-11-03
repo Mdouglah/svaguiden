@@ -133,6 +133,27 @@ function byggFraga(s) {
   return p;
 }
 
+// Enkel spärr mot missbruk: högst 20 anrop per 10 minuter per besökare (samma lösning som Elevguiden).
+// IP-adressen görs om till en oigenkännlig kod (HMAC med en slumpad nyckel som bara finns i minnet),
+// så att adressen aldrig sparas. Poster äldre än 10 minuter tas bort vid varje anrop.
+// Räknaren finns bara i minnet och nollställs när servern startar om.
+import { createHmac, randomBytes } from 'node:crypto';
+const NYCKEL = randomBytes(32);
+const FONSTER = 10 * 60 * 1000;
+const hits = new Map();
+function limited(ip) {
+  const now = Date.now();
+  for (const [k, tider] of hits) {
+    const kvar = tider.filter((t) => now - t < FONSTER);
+    if (kvar.length) hits.set(k, kvar); else hits.delete(k);
+  }
+  const kod = createHmac('sha256', NYCKEL).update(ip).digest('hex');
+  const list = hits.get(kod) || [];
+  list.push(now);
+  hits.set(kod, list);
+  return list.length > 20;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Endast POST är tillåtet.' });
@@ -141,6 +162,11 @@ export default async function handler(req, res) {
   const origin = req.headers.origin;
   if (!origin || !tillatnaAdresser().includes(origin)) {
     return res.status(403).json({ error: 'Förfrågan kommer inte från SVAGuiden.' });
+  }
+
+  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'okand';
+  if (limited(ip)) {
+    return res.status(429).json({ error: 'Du har ställt många frågor på kort tid. Vänta några minuter och försök igen.' });
   }
 
   const body = req.body;
